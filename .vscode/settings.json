@@ -1,0 +1,78 @@
+{
+  "search.exclude": {
+    "*-lock.json": true,
+    "*.lock": true,
+    "*.log": true,
+    "/build": true,
+    "**/node_modules": true,
+    "**/logs": true,
+    "**/web3d": true,
+    "**/*.bak": true,
+    "**/*.sql": true,
+    "**/vendor/": true,
+    "**/wp-admin/*/**": true,
+    "**/wp-content/{w3tc-config,cache,upgrade,plugins,languages}/": true,
+    "**/wp-includes/": true
+  },
+  "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,logs,target,out,build,vendor,ggb,geogebra,mathjax}/**/*",
+  "commentAnchors.workspace.matchFiles": "**/*.{js,vue}",
+
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+
+  "vetur.format.enable": false,
+
+  "eslint.format.enable": true,
+  "eslint.debug": false,
+  "eslint.workingDirectories": [{ "mode": "location" }],
+
+  "javascript.format.enable": false,
+  "json.format.enable": false,
+
+  // needed for vuetify plugin
+  "editor.quickSuggestions": {
+    "strings": true,
+  },
+
+  "editor.formatOnSaveMode": "modifications",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2,
+    "editor.formatOnType": true,
+    "editor.formatOnSaveMode": "modifications",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.stylelint": true
+    }
+  },
+
+  "[vue]": {
+    "editor.formatOnSaveMode": "modifications",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.stylelint": true
+    },
+    "editor.formatOnType": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+
+  "search.useIgnoreFiles": false,
+
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true
+  }
+}

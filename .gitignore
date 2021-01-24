@@ -1,0 +1,9 @@
+node_modules/*
+dist/*
+build/*
+tmp/
+/*.zip
+*.md
+
+.env
+!**/.emptydir

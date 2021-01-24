@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Kids Keyboard Game | Learn the Alphabet</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tinos&display=swap&text=אבגדהוזחטיכלמנסעפצקרשתםןץףך" rel="stylesheet">
+</head>
+
+<body>
+
+  <style>
+
+    html,
+    body,
+    #app {
+      min-width: 100vw;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+      background-color: #3498DB;
+    }
+
+    #app {
+      font-family: 'Tinos', 'Avenir', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: center;
+      color: #2c3e50;
+      display: flex;
+      place-items: center;
+      justify-content: center;
+    }
+  </style>
+  <div id="app">
+    <div :class="{ opacity: 0; }"><img src="src/assets/oval-loader.svg" width="50" alt=""></div>
+    <App />
+  </div>
+  <script src="https://unpkg.com/vue@3.0.5/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
+  <script type="module" src="src/index.js"></script>
+</body>
+
+</html>

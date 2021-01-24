@@ -54,13 +54,12 @@ export default {
   methods: {
     getColor(txt, isBright) {
       const charCode = txt.charCodeAt(0);
-      const h = parseInt((360 * Math.abs(Math.cos(charCode)) + 140 * this.repetition) % 360, 10);
+      const h = parseInt((140 * charCode * this.repetition) % 360, 10);
       const s = parseInt(92 + 8 * Math.abs(Math.sin((2 * charCode) / this.repetition)), 10);
       const l = parseInt(
-        (isBright ? 10 : 0) + (isBright ? 30 : 15) * Math.abs(Math.cos((3 * charCode) / this.repetition)),
+        (isBright ? 30 : 10) + (isBright ? 20 : 15) * Math.abs(Math.cos((3 * charCode) / this.repetition)),
         10
       );
-      console.log(`hsl(${h}, ${s}%, ${l}%)`);
       return `hsl(${h}, ${s}%, ${l}%)`;
     },
   },

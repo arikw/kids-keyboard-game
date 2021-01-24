@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       currentKey: "",
+      repetition: 1
     };
   },
   mounted() {
@@ -27,7 +28,12 @@ export default {
         return false;
       }
       if (ev.key.length === 1) {
-        this.currentKey = ev.key;
+        if (this.currentKey !== ev.key) {
+          this.currentKey = ev.key;
+          this.repetition = 1;
+        } else {
+          ++this.repetition;
+        }
       }
       ev.preventDefault();
       return false;
@@ -48,10 +54,10 @@ export default {
   methods: {
     getColor(txt, isBright) {
       const charCode = txt.charCodeAt(0);
-      const h = parseInt(360 * Math.abs(Math.cos(charCode)), 10);
-      const s = parseInt(92 + 8 * Math.abs(Math.sin(123 * charCode)), 10);
+      const h = parseInt(360 * Math.abs(Math.cos(this.repetition * charCode)), 10);
+      const s = parseInt(92 + 8 * Math.abs(Math.sin(2 * this.repetition * charCode)), 10);
       const l = parseInt(
-        (isBright ? 10 : 0) + (isBright ? 30 : 15) * Math.abs(Math.cos(256 * charCode)),
+        (isBright ? 10 : 0) + (isBright ? 30 : 15) * Math.abs(Math.cos(3 * this.repetition * charCode)),
         10
       );
       return `hsl(${h}, ${s}%, ${l}%)`;

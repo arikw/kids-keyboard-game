@@ -9,7 +9,7 @@
         </text>
       </svg>
     <img v-else src="src/assets/keyboard.svg" width="150" style="filter: invert(1);" alt="Press a key">
-    <input v-model="currentKey" @keyup="currentKey=currentKey[0]" class="offscreen"/>
+    <input :value="currentKey" @input="currentKey = $event.target.value" class="offscreen"/>
   </div>
 </template>
 
@@ -19,7 +19,8 @@ export default {
   data() {
     return {
       currentKey: "",
-      repetition: 1
+      repetition: 1,
+      isKeyBeingPressed: false
     };
   },
   mounted() {
@@ -31,10 +32,16 @@ export default {
         if (this.currentKey !== ev.key) {
           this.currentKey = ev.key;
           this.repetition = 1;
-        } else {
+        } else if (!this.isKeyBeingPressed) {
           ++this.repetition;
         }
+        this.isKeyBeingPressed = true;
       }
+      ev.preventDefault();
+      return false;
+    });
+    document.querySelector("html").addEventListener("keyup", (ev) => {
+      this.isKeyBeingPressed = false;
       ev.preventDefault();
       return false;
     });
@@ -45,19 +52,27 @@ export default {
       return false;
     };
     document.addEventListener('click', () => {
+      this.focusOnInputField();
+    });
+    this.focusOnInputField();
+  },
+  watch: {
+    currentKey(to, from) {
+      this.currentKey = to.substr(-1);
+    }
+  },
+  methods: {
+    focusOnInputField() {
       const inputField = document.getElementsByTagName("input")[0];
       inputField.focus();
       inputField.click();
-    });
-
-  },
-  methods: {
+    },
     getColor(txt, isBright) {
       const charCode = txt.charCodeAt(0);
-      const h = parseInt((140 * charCode * this.repetition) % 360, 10);
+      const h = parseInt((140 * ((charCode % 20 /* without mod, 'w' & 'e' look similar */) + this.repetition)) % 360, 10);
       const s = parseInt(92 + 8 * Math.abs(Math.sin((2 * charCode) / this.repetition)), 10);
       const l = parseInt(
-        (isBright ? 30 : 10) + (isBright ? 20 : 15) * Math.abs(Math.cos((3 * charCode) / this.repetition)),
+        (isBright ? 30 : 10) + 15 * Math.abs(Math.sin((3 * charCode) / this.repetition)),
         10
       );
       return `hsl(${h}, ${s}%, ${l}%)`;
@@ -84,7 +99,7 @@ export default {
   width: 100%;
   -webkit-text-stroke: white 1vmin;
   stroke: white;
-  stroke-width: 3vmin;
+  stroke-width: 2vmin;
   paint-order: stroke fill;
 }
 

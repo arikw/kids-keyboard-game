@@ -3,28 +3,43 @@
     id="main"
     :style="{ backgroundColor: getColor(currentKey.toUpperCase(), false) }"
   >
-      <svg xmlns="http://www.w3.org/2000/svg"  id="key" v-if="currentKey" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
-        <text textLength="100%" dominant-baseline="central" text-anchor="middle" x="50%" y="50%">
-          {{ currentKey }}
-        </text>
-      </svg>
+    <svg v-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
+      <text textLength="100%" dominant-baseline="central" text-anchor="middle" x="50%" y="50%">
+        {{ currentKey }}
+      </text>
+    </svg>
     <img v-else src="src/assets/keyboard.svg" width="150" style="filter: invert(1);" alt="Press a key">
-    <input :value="currentKey" @input="currentKey = $event.target.value" class="offscreen"/>
+    <input
+      type="password"
+      :name="Date.now()"
+      :value="currentKey"
+      class="offscreen"
+      autocomplete="new-password"
+      autocapitalize="off"
+      readonly
+      spellcheck="false"
+      @input="currentKey = $event.target.value"
+    >
   </div>
 </template>
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   data() {
     return {
-      currentKey: "",
+      currentKey: '',
       repetition: 1,
       isKeyBeingPressed: false
     };
   },
+  watch: {
+    currentKey(to, from) {
+      this.currentKey = to.substr(-1);
+    }
+  },
   mounted() {
-    document.querySelector("html").addEventListener("keydown", (ev) => {
+    document.querySelector('html').addEventListener('keydown', (ev) => {
       if (ev.altKey || ev.ctrlKey) {
         return false;
       }
@@ -40,7 +55,7 @@ export default {
       ev.preventDefault();
       return false;
     });
-    document.querySelector("html").addEventListener("keyup", (ev) => {
+    document.querySelector('html').addEventListener('keyup', (ev) => {
       this.isKeyBeingPressed = false;
       ev.preventDefault();
       return false;
@@ -56,16 +71,12 @@ export default {
     });
     this.focusOnInputField();
   },
-  watch: {
-    currentKey(to, from) {
-      this.currentKey = to.substr(-1);
-    }
-  },
   methods: {
     focusOnInputField() {
-      const inputField = document.getElementsByTagName("input")[0];
+      const inputField = document.getElementsByTagName('input')[0];
       inputField.focus();
       inputField.click();
+      inputField.removeAttribute('readonly');
     },
     getColor(txt, isBright) {
       const charCode = txt.charCodeAt(0);
@@ -76,12 +87,12 @@ export default {
         10
       );
       return `hsl(${h}, ${s}%, ${l}%)`;
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style>
+<style scoped>
 #main {
   display: flex;
   justify-content: center;

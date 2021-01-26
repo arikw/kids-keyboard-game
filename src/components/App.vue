@@ -3,6 +3,10 @@
     id="main"
     :style="{ backgroundColor: getColor(currentKey.toUpperCase(), false) }"
   >
+    <img
+      :src="`src/assets/fullscreen${inFullscreenMode ? '-exit' : ''}.svg`"
+      @click="toggleFullscreen"
+      width="45" class="fullscreen-btn" />
     <svg v-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
       <text textLength="100%" dominant-baseline="central" text-anchor="middle" x="50%" y="50%">
         {{ currentKey }}
@@ -30,7 +34,8 @@ export default {
     return {
       currentKey: '',
       repetition: 1,
-      isKeyBeingPressed: false
+      isKeyBeingPressed: false,
+      inFullscreenMode: false
     };
   },
   watch: {
@@ -60,6 +65,9 @@ export default {
       ev.preventDefault();
       return false;
     });
+    document.addEventListener('fullscreenchange', (event) => {
+      this.inFullscreenMode = !!document.fullscreenElement;
+    });
     document.oncontextmenu = function () {
       return false;
     };
@@ -72,6 +80,13 @@ export default {
     this.focusOnInputField();
   },
   methods: {
+    toggleFullscreen() {
+      if (!this.inFullscreenMode) {
+        document.querySelector('body').requestFullscreen().catch(err => false);
+      } else {
+        document.exitFullscreen();
+      }
+    },
     focusOnInputField() {
       const inputField = document.getElementsByTagName('input')[0];
       inputField.focus();
@@ -119,5 +134,14 @@ export default {
   height: 0;
   position: absolute;
   top: -100vh;
+}
+
+.fullscreen-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1em;
+  cursor: pointer;
+  opacity: 0.4;
 }
 </style>

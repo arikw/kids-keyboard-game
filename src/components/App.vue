@@ -20,7 +20,6 @@
       class="offscreen"
       autocomplete="new-password"
       autocapitalize="off"
-      readonly
       spellcheck="false"
       @input="currentKey = $event.target.value"
     >
@@ -91,7 +90,6 @@ export default {
       const inputField = document.getElementsByTagName('input')[0];
       inputField.focus();
       inputField.click();
-      inputField.removeAttribute('readonly');
     },
     getColor(txt, isBright) {
       const charCode = txt.charCodeAt(0);

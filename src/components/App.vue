@@ -6,7 +6,7 @@
     <img
       :src="`src/assets/fullscreen${inFullscreenMode ? '-exit' : ''}.svg`"
       @click="toggleFullscreen"
-      width="45" class="fullscreen-btn" />
+      width="35" class="fullscreen-btn" />
     <svg v-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
       <text textLength="100%" dominant-baseline="central" text-anchor="middle" x="50%" y="50%">
         {{ currentKey }}
@@ -140,6 +140,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  width: 2em;
   padding: 1em;
   cursor: pointer;
   opacity: 0.4;

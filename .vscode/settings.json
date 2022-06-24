@@ -37,6 +37,10 @@
 
   "editor.formatOnSaveMode": "modifications",
 
+  "stylelint.validate": [
+    "vue"
+  ],
+
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.detectIndentation": false,

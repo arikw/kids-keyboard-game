@@ -13,7 +13,7 @@
     <img v-if="!userTypedSomething"
          src="src/assets/keyboard.svg"
          width="150"
-         style="filter: invert(1); width: 50vw; pointer-events: none;"
+         style="filter: invert(1); width: 50vw; max-width: 250px; pointer-events: none;"
          :style="{ opacity: (isTouchDevice() && !userClickedPlay) ? 0.3 : 1}"
          alt="Press a key"
     >

@@ -15,14 +15,19 @@
     </svg>
     <img v-else src="src/assets/keyboard.svg" width="150" style="filter: invert(1);" alt="Press a key">
     <input
-      type="password"
+      ref="input"
+      type="text"
       :name="Date.now()"
-      :value="currentKey"
+      :value="/* the following value prevents auto complete and clears the field on keydown: */
+        `_${repetition}_${currentKey}`"
       class="offscreen"
-      autocomplete="new-password"
+      autocomplete="off"
       autocapitalize="off"
+      autofocus="true"
+      browser-autocomplete="false"
+      aria-autocomplete="false"
       spellcheck="false"
-      @input="currentKey = $event.target.value"
+      @input="inputFieldValue = $event.target.value"
     >
   </div>
 </template>
@@ -32,38 +37,48 @@ export default {
   name: 'App',
   data() {
     return {
+      inputFieldValue: '_',
       currentKey: '',
-      repetition: 1,
+      previousKey: null,
+      repetition: 0,
       isKeyBeingPressed: false,
       inFullscreenMode: false
     };
   },
   watch: {
-    currentKey(to, from) {
+    inputFieldValue(to, from) {
       this.currentKey = to.substr(-1);
+      this.previousKey = from.substr(-1);
+      console.log({ to, from, isKeyBeingPressed: this.isKeyBeingPressed });
+      console.log({ /* to, from,*/ currentKey: this.currentKey, previousKey: this.previousKey });
+      if (this.currentKey !== this.previousKey) {
+        this.repetition = 1;
+      } else if (!this.isKeyBeingPressed) {
+        ++this.repetition;
+      }
     }
   },
   mounted() {
-    document.querySelector('html').addEventListener('keydown', (ev) => {
-      if (ev.altKey || ev.ctrlKey) {
+    const $html = document.querySelector('html');
+    $html.addEventListener('keydown', (ev) => {
+      if (!this.isKeyBeingPressed ) {
+        setTimeout(() => { // prioritize inputFieldValue()
+          this.isKeyBeingPressed = true;
+        });
+        console.log('keydown', ev.key, this.repetition);
+      }
+
+      // ignore non single character keys (F1, Enter, TAB, etc.)
+      if (ev.altKey || ev.ctrlKey || ev.shiftKey || ev.key?.length !== 1) {
+        ev.preventDefault();
         return false;
       }
-      if (ev.key.length === 1) {
-        if (this.currentKey !== ev.key) {
-          this.currentKey = ev.key;
-          this.repetition = 1;
-        } else if (!this.isKeyBeingPressed) {
-          ++this.repetition;
-        }
-        this.isKeyBeingPressed = true;
-      }
-      ev.preventDefault();
-      return false;
     });
-    document.querySelector('html').addEventListener('keyup', (ev) => {
-      this.isKeyBeingPressed = false;
-      ev.preventDefault();
-      return false;
+    $html.addEventListener('keyup', () => {
+      setTimeout(() => { // prioritize inputFieldValue()
+        this.isKeyBeingPressed = false;
+        console.log('keyup');
+      });
     });
     document.addEventListener('fullscreenchange', (event) => {
       this.inFullscreenMode = !!document.fullscreenElement;
@@ -90,7 +105,6 @@ export default {
     focusOnInputField() {
       const inputField = document.getElementsByTagName('input')[0];
       inputField.focus();
-      inputField.click();
     },
     getColor(txt, isBright) {
       const charCode = txt.charCodeAt(0);
@@ -109,10 +123,10 @@ export default {
 <style scoped>
 #main {
   display: flex;
+  min-width: 100%;
+  min-height: 100%;
   justify-content: center;
   align-items: center;
-  min-width: 100vw;
-  min-height: 100vh;
   padding: 0;
   margin: 0;
   transition: background 0.2s ease 0s;
@@ -129,10 +143,9 @@ export default {
 }
 
 .offscreen {
-  width: 0;
-  height: 0;
   position: absolute;
   top: -100vh;
+  left: -100vw;
 }
 
 .fullscreen-btn {

@@ -28,7 +28,7 @@ window.loadSFC = function (path) {
 const app = Vue.createApp({
   template: '<App />',
   components: {
-    App: window.loadSFC('src/components/App.vue')
+    App: window.loadSFC('src/components/app.vue')
   }
 });
 

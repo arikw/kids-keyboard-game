@@ -63,8 +63,6 @@ export default {
     inputFieldValue(to, from) {
       this.currentKey = to.substr(-1);
       this.previousKey = from.substr(-1);
-      console.log({ to, from, isKeyBeingPressed: this.isKeyBeingPressed });
-      console.log({ /* to, from,*/ currentKey: this.currentKey, previousKey: this.previousKey });
       if (this.currentKey !== this.previousKey) {
         this.repetition = 1;
       } else if (!this.isKeyBeingPressed) {
@@ -79,7 +77,6 @@ export default {
         setTimeout(() => { // prioritize inputFieldValue()
           this.isKeyBeingPressed = true;
         });
-        console.log('keydown', ev.key, this.repetition);
       }
 
       // ignore non single character keys (F1, Enter, TAB, etc.)
@@ -91,7 +88,6 @@ export default {
     $html.addEventListener('keyup', () => {
       setTimeout(() => { // prioritize inputFieldValue()
         this.isKeyBeingPressed = false;
-        console.log('keyup');
       });
     });
     document.addEventListener('fullscreenchange', (event) => {

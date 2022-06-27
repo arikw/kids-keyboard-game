@@ -5,15 +5,23 @@
   >
     <img
       :src="`src/assets/fullscreen${inFullscreenMode ? '-exit' : ''}.svg`"
-      width="35"
-      class="fullscreen-btn" @click="toggleFullscreen"
+      width="35" class="fullscreen-btn"
+      @click="toggleFullscreen"
     >
-    <svg v-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
+    <span v-if="isTouchDevice() && !userClickedPlay && !userTypedSomething" style="color: white; position: absolute; font-size: 50px; margin-right: -10px;">▶</span>
+    <span v-if="isTouchDevice() && !userClickedPlay && !userTypedSomething" style="cursor: pointer; color: white; position: absolute; font-size: 90px;">◯</span>
+    <img v-if="!userTypedSomething"
+         src="src/assets/keyboard.svg"
+         width="150"
+         style="filter: invert(1); width: 50vw; pointer-events: none;"
+         :style="{ opacity: (isTouchDevice() && !userClickedPlay) ? 0.3 : 1}"
+         alt="Press a key"
+    >
+    <svg v-else-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
       <text textLength="100%" dominant-baseline="central" text-anchor="middle" x="50%" y="50%">
         {{ currentKey }}
       </text>
     </svg>
-    <img v-else src="src/assets/keyboard.svg" width="150" style="filter: invert(1);" alt="Press a key">
     <input
       ref="input"
       type="text"
@@ -42,8 +50,14 @@ export default {
       previousKey: null,
       repetition: 0,
       isKeyBeingPressed: false,
-      inFullscreenMode: false
+      inFullscreenMode: false,
+      userClickedPlay: false
     };
+  },
+  computed: {
+    userTypedSomething() {
+      return this.repetition > 0;
+    }
   },
   watch: {
     inputFieldValue(to, from) {
@@ -83,14 +97,11 @@ export default {
     document.addEventListener('fullscreenchange', (event) => {
       this.inFullscreenMode = !!document.fullscreenElement;
     });
-    document.oncontextmenu = function () {
-      return false;
-    };
-    document.ondragstart = function () {
-      return false;
-    };
+    document.oncontextmenu = function () { return false; };
+    document.ondragstart = function () { return false; };
     document.addEventListener('click', () => {
       this.focusOnInputField();
+      this.userClickedPlay = true;
     });
     this.focusOnInputField();
   },
@@ -115,7 +126,8 @@ export default {
         10
       );
       return `hsl(${h}, ${s}%, ${l}%)`;
-    }
+    },
+    isTouchDevice: () => ('ontouchstart' in window)
   }
 };
 </script>
@@ -130,6 +142,7 @@ export default {
   padding: 0;
   margin: 0;
   transition: background 0.2s ease 0s;
+  user-select: none;
 }
 
 #key {

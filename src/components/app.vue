@@ -8,8 +8,13 @@
       width="35" class="fullscreen-btn"
       @click="toggleFullscreen"
     >
-    <span v-if="isTouchDevice() && !userClickedPlay && !userTypedSomething" style="color: white; position: absolute; font-size: 50px; margin-right: -10px;">▶</span>
-    <span v-if="isTouchDevice() && !userClickedPlay && !userTypedSomething" style="cursor: pointer; color: white; position: absolute; font-size: 90px;">◯</span>
+    <img v-if="isTouchDevice() && !userClickedPlay && !userTypedSomething"
+         src="src/assets/play.svg"
+         width="100"
+         style="filter: invert(1); position: absolute; cursor: pointer;"
+
+         alt="Press to play"
+    >
     <img v-if="!userTypedSomething"
          src="src/assets/keyboard.svg"
          width="150"

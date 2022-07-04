@@ -13,14 +13,13 @@
          src="src/assets/play.svg"
          width="100"
          style="filter: invert(1); position: absolute; cursor: pointer;"
-
          alt="Press to play"
     >
-    <img v-if="isPaused || !userTypedSomething"
+    <img v-if="isPaused || userNeverTypedSomething"
          src="src/assets/keyboard.svg"
          width="150"
          style="filter: invert(1); width: 50vw; max-width: 250px; pointer-events: none;"
-         :style="{ opacity: (isMobileDevice() && isPaused) ? 0.3 : 1}"
+         :style="{ opacity: (isPaused) ? 0.3 : 1}"
          alt="Press a key"
     >
     <svg v-else-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
@@ -73,14 +72,15 @@ export default {
     };
   },
   computed: {
-    userTypedSomething() {
-      return this.repetition > 0;
+    userNeverTypedSomething() {
+      return this.repetition === 0;
     }
   },
   watch: {
     inputFieldValue(to, from) {
       this.currentKey = to.substr(-1);
       this.previousKey = from.substr(-1);
+      this.isPaused = false;
       if (this.currentKey !== this.previousKey) {
         this.repetition = 1;
       } else if (!this.isKeyBeingPressed) {
@@ -117,11 +117,17 @@ export default {
       this.focusOnInputField();
       this.isPaused = false;
     });
+    const initialHeightDiff = (window.screen.availHeight - window.innerHeight);
+    let maxHeightDiff = initialHeightDiff;
+
     if (isMobileDevice()) {
-      window.addEventListener('resize', (event) => {
-        // if current/available height ratio is small enough, virtual keyboard is probably visible
-        this.isPaused = ((window.innerHeight / window.screen.availHeight) > 0.6);
-      });
+      window.addEventListener('resize', debounce(() => {
+        // if height changed enough, virtual keyboard is probably visible
+        const currentHeightDiff = (window.screen.availHeight - window.innerHeight);
+        maxHeightDiff = Math.max(maxHeightDiff, currentHeightDiff);
+        this.isPaused = (maxHeightDiff !== initialHeightDiff) && ((currentHeightDiff - initialHeightDiff) < 100);
+        console.log(initialHeightDiff, currentHeightDiff, (currentHeightDiff - initialHeightDiff));
+      }));
     }
     this.focusOnInputField();
   },
@@ -151,6 +157,14 @@ export default {
     isMobileDevice
   }
 };
+
+function debounce(func, timeout = 120) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
 
 </script>
 

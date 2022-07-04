@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "display": "fullscreen",
+  "scope": "/",
+  "start_url": "/",
+  "name": "Kids Keyboard Game",
+  "short_name": "Keyboard Game",
+  "description": "Learn to Type",
+  "orientation": "portrait",
+  "theme_color": "#3498DB",
+  "background_color": "#3498DB",
+  "icons": [
+    {
+      "src": "/src/assets/icon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

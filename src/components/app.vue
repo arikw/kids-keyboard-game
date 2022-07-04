@@ -4,22 +4,23 @@
     :style="{ backgroundColor: getColor(currentKey.toUpperCase(), false) }"
   >
     <img
+      v-if="!isInStandaloneMode()"
       :src="`src/assets/fullscreen${inFullscreenMode ? '-exit' : ''}.svg`"
       width="35" class="fullscreen-btn"
       @click="toggleFullscreen"
     >
-    <img v-if="isTouchDevice() && !userClickedPlay && !userTypedSomething"
+    <img v-if="isPaused"
          src="src/assets/play.svg"
          width="100"
          style="filter: invert(1); position: absolute; cursor: pointer;"
 
          alt="Press to play"
     >
-    <img v-if="!userTypedSomething"
+    <img v-if="isPaused || !userTypedSomething"
          src="src/assets/keyboard.svg"
          width="150"
          style="filter: invert(1); width: 50vw; max-width: 250px; pointer-events: none;"
-         :style="{ opacity: (isTouchDevice() && !userClickedPlay) ? 0.3 : 1}"
+         :style="{ opacity: (isMobileDevice() && isPaused) ? 0.3 : 1}"
          alt="Press a key"
     >
     <svg v-else-if="currentKey" id="key" xmlns="http://www.w3.org/2000/svg" :style="{ fill: getColor(currentKey.toUpperCase(), true) }">
@@ -46,6 +47,18 @@
 </template>
 
 <script>
+
+const
+  isTouchDevice = () => ('ontouchstart' in window),
+  isInStandaloneMode = () => {
+    const mqStandAlone = '(display-mode: fullscreen)';
+    if (navigator.standalone || window.matchMedia(mqStandAlone).matches) {
+      return true;
+    }
+    return false;
+  },
+  isMobileDevice = () => (isTouchDevice() && window.matchMedia('(max-width: 767px)').matches);
+
 export default {
   name: 'App',
   data() {
@@ -56,7 +69,7 @@ export default {
       repetition: 0,
       isKeyBeingPressed: false,
       inFullscreenMode: false,
-      userClickedPlay: false
+      isPaused: isMobileDevice()
     };
   },
   computed: {
@@ -78,7 +91,7 @@ export default {
   mounted() {
     const $html = document.querySelector('html');
     $html.addEventListener('keydown', (ev) => {
-      if (!this.isKeyBeingPressed ) {
+      if (!this.isKeyBeingPressed) {
         setTimeout(() => { // prioritize inputFieldValue()
           this.isKeyBeingPressed = true;
         });
@@ -102,8 +115,14 @@ export default {
     document.ondragstart = function () { return false; };
     document.addEventListener('click', () => {
       this.focusOnInputField();
-      this.userClickedPlay = true;
+      this.isPaused = false;
     });
+    if (isMobileDevice()) {
+      window.addEventListener('resize', (event) => {
+        // if current/available height ratio is small enough, virtual keyboard is probably visible
+        this.isPaused = ((window.innerHeight / window.screen.availHeight) > 0.6);
+      });
+    }
     this.focusOnInputField();
   },
   methods: {
@@ -128,9 +147,11 @@ export default {
       );
       return `hsl(${h}, ${s}%, ${l}%)`;
     },
-    isTouchDevice: () => ('ontouchstart' in window)
+    isInStandaloneMode,
+    isMobileDevice
   }
 };
+
 </script>
 
 <style scoped>
@@ -144,6 +165,7 @@ export default {
   margin: 0;
   transition: background 0.2s ease 0s;
   user-select: none;
+  color: white;
 }
 
 #key {

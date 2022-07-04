@@ -1,8 +1,8 @@
 {
-  "id": "/",
+  "id": "./",
   "display": "fullscreen",
-  "scope": "/",
-  "start_url": "/",
+  "scope": ".",
+  "start_url": "./",
   "name": "Kids Keyboard Game",
   "short_name": "Keyboard Game",
   "description": "Learn to Type",

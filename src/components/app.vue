@@ -123,6 +123,7 @@ export default {
     if (isMobileDevice()) {
       window.addEventListener('resize', debounce(() => {
         // if height changed enough, virtual keyboard is probably visible
+        // notice: iOS doesn't change viewport height
         const currentHeightDiff = (window.screen.availHeight - window.innerHeight);
         maxHeightDiff = Math.max(maxHeightDiff, currentHeightDiff);
         this.isPaused = (maxHeightDiff !== initialHeightDiff) && ((currentHeightDiff - initialHeightDiff) < 100);

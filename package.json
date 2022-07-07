@@ -26,6 +26,6 @@
     "stylelint-config-standard-scss": "^4.0.0",
     "stylelint-scss": "^4.2.0",
     "vite": "^2.9.12",
-    "vite-plugin-vue-static-sfc": "git+https://github.com/arikw/vite-plugin-vue-static-sfc.git"
+    "vite-plugin-vue-static-sfc": "^1.0.0"
   }
 }

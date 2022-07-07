@@ -3,6 +3,7 @@ dist/*
 build/*
 tmp/
 /*.zip
+/*.url
 *.md
 
 .env
